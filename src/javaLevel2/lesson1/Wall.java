@@ -5,6 +5,7 @@ public class Wall extends Obstacle{
     private int height;
 
     public Wall(int height) {
+        super(height);
         this.height = height;
     }
 

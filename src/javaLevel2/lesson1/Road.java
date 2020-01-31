@@ -4,6 +4,7 @@ public class Road extends Obstacle {
     private int lenght;
 
     public Road(int lenght) {
+        super(lenght);
         this.lenght = lenght;
     }
 
