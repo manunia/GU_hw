@@ -1,6 +1,6 @@
 package javaLevel2.lesson1;
 
-public class Road {
+public class Road extends Obstacle {
     private int lenght;
 
     public Road(int lenght) {
@@ -13,5 +13,10 @@ public class Road {
 
     public void setLenght(int lenght) {
         this.lenght = lenght;
+    }
+
+    @Override
+    void result() {
+        System.out.println("result = " + lenght);
     }
 }

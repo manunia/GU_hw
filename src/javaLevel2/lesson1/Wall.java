@@ -4,6 +4,9 @@ public class Wall extends Obstacle{
 
     private int height;
 
+    public Wall(int height) {
+        this.height = height;
+    }
 
     public int getHeight() {
         return height;
@@ -14,7 +17,7 @@ public class Wall extends Obstacle{
     }
 
     @Override
-    void result(Competitable competitor) {
-        System.out.println(competitor);
+    void result() {
+        System.out.println("result = " + height);
     }
 }
