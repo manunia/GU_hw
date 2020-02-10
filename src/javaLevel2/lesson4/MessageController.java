@@ -38,7 +38,8 @@ public class MessageController {
     public void sendMessage() {
         message += messageField.getText() + "\n";
         messageArea.setText(message);
-        messageField.setText("");
+        messageField.clear();
+        messageField.requestFocus();
     }
 
 
