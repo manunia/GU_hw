@@ -2,13 +2,17 @@ package javaLevel2.lesson4;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-public class MessageController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class MessageController implements Initializable {
     @FXML
     private TextArea messageArea;
     @FXML
@@ -22,11 +26,7 @@ public class MessageController {
 
     }
 
-    public MessageController(String message, Main main) {
-        this.message = message;
-        this.main = main;
 
-    }
 
     public void setMain(Main main) {
         this.main = main;
@@ -43,6 +43,20 @@ public class MessageController {
     }
 
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        messageField.setOnKeyPressed(event -> {
+            if (event.isControlDown() && event.getCode().equals(KeyCode.ENTER)) {
+                String text = messageField.getText().trim() + "\n";
+                if (!text.isEmpty()) {
+                    message+=text;
+                    messageArea.setText(message);
+                    messageField.clear();
+                    messageField.requestFocus();
+                }
+                event.consume();
+            }
+        });
 
-
+    }
 }

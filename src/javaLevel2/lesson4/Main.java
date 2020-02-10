@@ -11,7 +11,6 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    MessageController controller = new MessageController();
     Scene scene;
 
     public Scene getScene() {
@@ -31,14 +30,4 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    public void sendMessageOnEnterPressed() {
-        this.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ENTER) {
-                    controller.sendMessage();
-                }
-            }
-        });
-    }
 }
