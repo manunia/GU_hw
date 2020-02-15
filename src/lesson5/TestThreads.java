@@ -19,7 +19,7 @@ public class TestThreads {
     }
 
 
-    public static void methodWithThreads(float[] arr) {
+    public static void methodWithThreads(float[] arr) throws InterruptedException {
         for (int i = 0; i < arr.length; i++) {
             arr[i] = 1;
         }
@@ -32,7 +32,7 @@ public class TestThreads {
             @Override
             public void run() {
                 for (int i = 0; i < a1.length; i++) {
-                    arr[i] = (float)(a1[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) * Math.cos(0.4f + i / 2));
+                    a1[i] = (float)(a1[i] * Math.sin(0.2f + (i+h) / 5) * Math.cos(0.2f + (i+h) / 5) * Math.cos(0.4f + (i+h) / 2));
                 }
             }
         };
@@ -40,7 +40,7 @@ public class TestThreads {
             @Override
             public void run() {
                 for (int i = 0; i < a2.length; i++) {
-                    arr[i] = (float)(a2[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) * Math.cos(0.4f + i / 2));
+                    a2[i] = (float)(a2[i] * Math.sin(0.2f + (i+h) / 5) * Math.cos(0.2f + (i+h) / 5) * Math.cos(0.4f + (i+h) / 2));
                 }
             }
         };
@@ -48,13 +48,15 @@ public class TestThreads {
         Thread t2 = new Thread(r2);
         t1.start();
         t2.start();
+        t1.join();
+        t2.join();
         System.arraycopy(a1, 0, arr, 0, h);
         System.arraycopy(a2, 0, arr, h, h);
         System.out.println("Время выполнения метода с потоками:");
         System.out.println(System.currentTimeMillis() - a);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         method1(arr);
         methodWithThreads(arr);
     }
