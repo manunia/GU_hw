@@ -13,14 +13,17 @@ public class Client {
         }
     }
 
+    Socket client = new Socket("localhost", 9997);
+
     public Client() throws IOException, InterruptedException {
+
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Socket client = new Socket("localhost", 9997);
+                    //Socket client = new Socket("localhost", 9997);
                     try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()))
+                    //BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()))
                     ) {
                         //send message to server
                         while (true) {
@@ -29,7 +32,7 @@ public class Client {
                             writer.newLine();
                             writer.flush();
                             //get message from server
-                            System.out.println(reader.readLine());
+                            //System.out.println(reader.readLine());
                         }
                     }
                 } catch (Exception e) {
@@ -37,7 +40,19 @@ public class Client {
                 }
             }
         });
+
         thread.start();
-        thread.join();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()))) {
+            //send message to server
+            while (true) {
+                //get message from server
+                System.out.println(reader.readLine());
+            }
+        }
+
+        //thread.setDaemon(true);
+
+        //thread.join();
     }
 }

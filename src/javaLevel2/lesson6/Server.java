@@ -1,9 +1,6 @@
 package javaLevel2.lesson6;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
@@ -12,30 +9,25 @@ public class Server {
     public static void main(String[] args) {
         try {
             new Server();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
     }
 
-    public Server() throws InterruptedException {
-
+    public Server() throws InterruptedException, IOException {
+        ServerSocket serverSocket = new ServerSocket(9997);
+        Socket client = serverSocket.accept();
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    ServerSocket serverSocket = new ServerSocket(9997);
-                    Socket client = serverSocket.accept();
-                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()))
-                    ){
+
+                    try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()))){
                         while (true){
                             Scanner sc = new Scanner(System.in);
-                            //System.out.print("server: ");
                             writer.write("server: " + sc.nextLine());
                             writer.newLine();
                             writer.flush();
-                            //get message from client
-                            System.out.println(reader.readLine());
                         }
                     }
                 } catch (Exception e) {
@@ -43,8 +35,16 @@ public class Server {
                 }
             }
         });
+        thread.setDaemon(true);
         thread.start();
-        thread.join();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()))) {
+            //send message to server
+            while (true) {
+                //get message from client
+                System.out.println(reader.readLine());
+            }
+        }
     }
 
 }
