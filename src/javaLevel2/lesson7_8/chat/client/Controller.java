@@ -1,4 +1,4 @@
-package client;
+package javaLevel2.lesson7_8.chat.client;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

@@ -1,4 +1,4 @@
-package server;
+package javaLevel2.lesson7_8.chat.server;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -51,7 +51,15 @@ public class ClientHandler {
                             out.writeUTF("/end");
                             break;
                         }
-                        server.broadcastMsg(str);
+                        if (str.startsWith("/w ")) {
+                            String[] token1 = str.split(" ",3);
+                            String friendNick = server
+                                    .getAuthService()
+                                    .getNickname(token1[1]);
+                            server.broadcastPrivateMsg(str,friendNick);
+                        } else {
+                            server.broadcastMsg(str);
+                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -89,5 +97,9 @@ public class ClientHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getNick() {
+        return nick;
     }
 }

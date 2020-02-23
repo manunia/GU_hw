@@ -1,4 +1,4 @@
-package server;
+package javaLevel2.lesson7_8.chat.server;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +30,16 @@ public class SimpleAuthService implements AuthService {
     public String getNicknameByLoginAndPassword(String login, String password) {
         for (UserData o:users) {
             if(o.login.equals(login) && o.password.equals(password)){
+                return o.nickname;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String getNickname(String nick) {
+        for (UserData o:users) {
+            if(o.nickname.equals(nick)){
                 return o.nickname;
             }
         }

@@ -1,4 +1,4 @@
-package server;
+package javaLevel2.lesson7_8.chat.server;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -47,6 +47,17 @@ public class Server {
     public void broadcastMsg(String msg){
         for (ClientHandler c: clients ) {
             c.sendMsg(msg);
+        }
+    }
+
+    public void broadcastPrivateMsg(String msg, String nick){
+        for (ClientHandler c: clients ) {
+            if (c.getNick().equals(nick)){
+                c.sendMsg(msg);
+            } else {
+                c.sendMsg("");
+            }
+
         }
     }
 
