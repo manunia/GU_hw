@@ -47,18 +47,22 @@ public class ClientHandler {
                     //цикл работы
                     while (true) {
                         String str = in.readUTF();
-                        if (str.equals("/end")) {
-                            out.writeUTF("/end");
-                            break;
-                        }
-                        if (str.startsWith("/w ")) {
-                            String[] token1 = str.split(" ",3);
-                            String friendNick = server
-                                    .getAuthService()
-                                    .getNickname(token1[1]);
-                            server.broadcastPrivateMsg(str,friendNick);
-                        } else {
-                            server.broadcastMsg(str);
+                        if (str.startsWith("/")) {
+                            if (str.equals("/end")) {
+                                out.writeUTF("/end");
+                                break;
+                            }
+                            if (str.startsWith("/w ")) {
+                                String[] token1 = str.split(" ", 3);
+                                if (token1.length == 3) {
+                                    String friendNick = server
+                                            .getAuthService()
+                                            .getNickname(token1[1]);
+                                    server.broadcastPrivateMsg(str, friendNick);
+                                }
+                            } else {
+                                server.broadcastMsg(nick, str);
+                            }
                         }
                     }
                 } catch (IOException e) {
