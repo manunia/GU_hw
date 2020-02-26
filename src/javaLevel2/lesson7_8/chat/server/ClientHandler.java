@@ -27,7 +27,9 @@ public class ClientHandler {
                         String str = in.readUTF();
                         if (str.startsWith("/auth ")) {
                             String[] token = str.split(" ");
-//                            String[] token1 = str.split(" ",3);
+                            if (token.length < 3) {
+                                continue;
+                            }
                             String newNick = server
                                     .getAuthService()
                                     .getNicknameByLoginAndPassword(token[1], token[2]);
