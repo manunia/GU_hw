@@ -50,9 +50,9 @@ public class Server {
         }
     }
 
-    public void broadcastPrivateMsg(String msg, String nick){
+    public void privateMsg(String msg, String senderNick, String resiverNick){
         for (ClientHandler c: clients ) {
-            if (c.getNick().equals(nick)){
+            if (c.getNick().equals(senderNick) || c.getNick().equals(resiverNick)){
                 c.sendMsg(msg);
             } else {
                 c.sendMsg("");
