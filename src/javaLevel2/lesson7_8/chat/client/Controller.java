@@ -108,11 +108,26 @@ public class Controller implements Initializable {
                     //цикл работы
                     while (true) {
                         String str = in.readUTF();
-                        if (str.equals("/end")) {
-                            setAuthenticated(false);
-                            break;
+                        if (str.startsWith("/")) {
+                            if (str.equals("/end")) {
+                                setAuthenticated(false);
+                                break;
+                            }
+                            if (str.startsWith("/clientlist ")) {
+                                String[] token = str.split(" ");
+                                Platform.runLater(() -> {
+                                    clientList.getItems().clear();
+                                    for (int i = 1; i < token.length; i++) {
+                                        clientList.getItems().add(token[i]);
+                                    }
+                                });
+                            }
+
+                        } else {
+                            textArea.appendText(str + "\n");
                         }
-                        textArea.appendText(str + "\n");
+
+
                     }
                 } catch (SocketException e) {
                     System.out.println("Сервер отключился");

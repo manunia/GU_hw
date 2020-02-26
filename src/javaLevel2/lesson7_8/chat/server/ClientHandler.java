@@ -24,6 +24,7 @@ public class ClientHandler {
                 try {
                     //цикл аутентификации
                     while (true) {
+
                         String str = in.readUTF();
                         if (str.startsWith("/auth ")) {
                             String[] token = str.split(" ");
