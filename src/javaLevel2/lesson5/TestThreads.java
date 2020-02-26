@@ -1,4 +1,4 @@
-package lesson5;
+package javaLevel2.lesson5;
 
 public class TestThreads {
 
