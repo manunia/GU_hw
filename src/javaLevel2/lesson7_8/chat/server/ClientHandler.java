@@ -56,7 +56,7 @@ public class ClientHandler {
                             String friendNick = server
                                     .getAuthService()
                                     .getNickname(token1[1]);
-                            server.broadcastPrivateMsg(str,friendNick);
+                            server.privateMsg(str,friendNick,nick);
                         } else {
                             server.broadcastMsg(str);
                         }
