@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -33,6 +34,8 @@ public class Controller implements Initializable {
     public TextField loginField;
     @FXML
     public PasswordField passwordField;
+    @FXML
+    public ListView clientList;
 
     Socket socket;
     DataInputStream in;
@@ -50,6 +53,8 @@ public class Controller implements Initializable {
         authPanel.setManaged(!authenticated);
         msgPanel.setVisible(authenticated);
         msgPanel.setManaged(authenticated);
+        clientList.setVisible(authenticated);
+        clientList.setManaged(authenticated);
         if (!authenticated) {
             nickname = "";
         }
@@ -69,6 +74,7 @@ public class Controller implements Initializable {
                     if (socket != null && !socket.isClosed()) {
                         try {
                             out.writeUTF("/end");
+                            socket.close();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
