@@ -32,12 +32,17 @@ public class ClientHandler {
                                     .getAuthService()
                                     .getNicknameByLoginAndPassword(token[1], token[2]);
                             if (newNick != null) {
-                                sendMsg("/authok " + newNick);
-                                nick = newNick;
                                 login = token[1];
-                                server.subscribe(this);
-                                System.out.println("Клиент " + nick + " подключился");
-                                break;
+                                if (!server.isLoginAuthorized(login)) {
+                                    sendMsg("/authok " + newNick);
+                                    nick = newNick;
+                                    server.subscribe(this);
+                                    System.out.println("Клиент " + nick + " подключился");
+                                    break;
+                                } else {
+                                    sendMsg("с этим логином авторизовались");
+                                }
+
                             } else {
                                 sendMsg("Неверный логин / пароль");
                             }
@@ -105,5 +110,9 @@ public class ClientHandler {
 
     public String getNick() {
         return nick;
+    }
+
+    public String getLogin() {
+        return login;
     }
 }

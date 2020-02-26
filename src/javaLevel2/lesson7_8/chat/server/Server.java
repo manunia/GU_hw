@@ -68,4 +68,13 @@ public class Server {
     public void unsubscribe(ClientHandler clientHandler){
         clients.remove(clientHandler);
     }
+
+    public boolean isLoginAuthorized(String login) {
+        for (ClientHandler c:clients) {
+            if (c.getLogin().equals(login)) return true;
+        }
+        return false;
+    }
+
+
 }
