@@ -9,6 +9,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -179,5 +180,13 @@ public class Controller implements Initializable {
         Platform.runLater(() -> {
             ((Stage) textField.getScene().getWindow()).setTitle(title);
         });
+    }
+
+    public void clickClientList(MouseEvent mouseEvent) {
+        System.out.println(clientList.getSelectionModel().getSelectedItem());
+
+        String receiver = clientList.getSelectionModel().getSelectedItem().toString();
+        textField.setText("/w " + receiver + " ");
+
     }
 }
