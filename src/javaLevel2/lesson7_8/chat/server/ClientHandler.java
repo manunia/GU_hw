@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 public class ClientHandler {
     Socket socket = null;
@@ -22,6 +23,7 @@ public class ClientHandler {
 
             new Thread(() -> {
                 try {
+                    socket.setSoTimeout(120000);
                     //цикл аутентификации
                     while (true) {
                         String str = in.readUTF();
@@ -40,6 +42,7 @@ public class ClientHandler {
                                     nick = newNick;
                                     server.subscribe(this);
                                     System.out.println("Клиент " + nick + " подключился");
+                                    socket.setSoTimeout(0);
                                     break;
                                 } else {
                                     sendMsg("с этим логином авторизовались");
@@ -65,13 +68,15 @@ public class ClientHandler {
                                     String friendNick = server
                                             .getAuthService()
                                             .getNickname(token1[1]);
-                                    server.privateMsg(str, friendNick,nick);
+                                    server.privateMsg(str, friendNick, nick);
                                 }
                             } else {
                                 server.broadcastMsg(nick, str);
                             }
                         }
                     }
+                } catch (SocketTimeoutException e) {
+                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {

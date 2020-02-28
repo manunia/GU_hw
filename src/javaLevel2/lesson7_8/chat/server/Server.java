@@ -62,11 +62,15 @@ public class Server {
     }
 
     public void subscribe(ClientHandler clientHandler){
+
         clients.add(clientHandler);
+        broadcastClientList();
     }
 
     public void unsubscribe(ClientHandler clientHandler){
+
         clients.remove(clientHandler);
+        broadcastClientList();
     }
 
     public boolean isLoginAuthorized(String login) {
@@ -74,6 +78,18 @@ public class Server {
             if (c.getLogin().equals(login)) return true;
         }
         return false;
+    }
+
+    public void broadcastClientList() {
+        StringBuilder sb = new StringBuilder("/clientlist");
+
+        for (ClientHandler c:clients) {
+            sb.append(c.getNick()).append(" ");
+        }
+        String msg = sb.toString();
+        for (ClientHandler c:clients) {
+            c.sendMsg(msg);
+        }
     }
 
 
