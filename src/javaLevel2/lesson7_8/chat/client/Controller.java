@@ -4,13 +4,17 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -48,6 +52,8 @@ public class Controller implements Initializable {
     private boolean authenticated;
     private String nickname;
 
+    Stage registrationStage;
+
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
         authPanel.setVisible(!authenticated);
@@ -65,6 +71,7 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        registrationStage = createRegistrationWindow();
         authenticated = false;
         Platform.runLater(() -> {
             Stage stage = (Stage) textField.getScene().getWindow();
@@ -188,5 +195,39 @@ public class Controller implements Initializable {
         String receiver = clientList.getSelectionModel().getSelectedItem().toString();
         textField.setText("/w " + receiver + " ");
 
+    }
+
+    public void registrationActionEvent(ActionEvent actionEvent) {
+        registrationStage.show();
+    }
+
+    private Stage createRegistrationWindow() {
+        Stage stage = null;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("registrationWindow.fxml"));
+            Parent root = loader.load();
+            stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            RegistrationController registrationController = loader.getController();
+            registrationController.controller = this;
+            stage.setTitle("Registration");
+            stage.setScene(new Scene(root,300,200));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return stage;
+    }
+
+    public void tryRegistr(String login, String nickname, String password, String confirm ) {
+        String msg = String.format("/reg %s %s %s %s", login, nickname, password, confirm);
+
+        if (socket == null || socket.isClosed()) {
+            connect();
+        }
+        try {
+            out.writeUTF(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
