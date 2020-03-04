@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="javaLevel2.lesson7_8.chat.client.RegistrationController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <Label text="Login"/>
+    <TextField fx:id="loginField"/>
+    <Label text="Nickname"/>
+    <TextField fx:id="nickField"/>
+    <Label text="Password"/>
+    <PasswordField fx:id="passwordField"/>
+    <Label text="Confirm password"/>
+    <PasswordField fx:id="confirmPasswordField"/>
+
+    <Button text="Зфрегистрировать" onAction="#clickOk"/>
+
+</VBox>

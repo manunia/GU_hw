@@ -27,6 +27,16 @@ public class ClientHandler {
                     //цикл аутентификации
                     while (true) {
                         String str = in.readUTF();
+                        if (str.startsWith("/reg ")) {
+                            String[] token = str.split(" ");
+                            boolean isRegistr = server.getAuthService().registration(token[1],token[2],token[3],token[4]);
+                            if (isRegistr) {
+                                sendMsg("Регистрация прошла успешно");
+                            } else {
+                                sendMsg("Пользователь с указанной парой логин/пароль не можетбыть зарегистрирован");
+                            }
+                            
+                        }
                         if (str.startsWith("/auth ")) {
                             String[] token = str.split(" ");
                             if (token.length < 3) {
