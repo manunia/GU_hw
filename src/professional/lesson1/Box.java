@@ -26,8 +26,12 @@ public class Box<F extends Fruit> {
     }
 
     public void pourInto(Box<F> box) {
-        box.fruits.addAll(this.fruits);
-        this.fruits.removeAll(fruits);
+        if (!box.equals(this)) {
+            box.fruits.addAll(this.fruits);
+            this.fruits.removeAll(fruits);
+        } else {
+            System.out.println("нельзя пересыпать фрукты сам в себя");
+        }
     }
 
     public void addFruitInBox(F fruit) {

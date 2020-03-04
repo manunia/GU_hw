@@ -30,6 +30,7 @@ public class TestBox {
         appleBox2.pourInto(appleBox);
         System.out.println("Apple box weight after pour " + appleBox.getWeight());
         System.out.println("Apple box weight after pour " + appleBox2.getWeight());
+        appleBox.pourInto(appleBox);
         //orangeBox.pourInto(appleBox);
 
         //test of method add
