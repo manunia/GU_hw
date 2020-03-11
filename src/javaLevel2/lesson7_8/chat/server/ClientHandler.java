@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 public class ClientHandler {
     Socket socket = null;
@@ -22,22 +23,41 @@ public class ClientHandler {
 
             new Thread(() -> {
                 try {
+                    socket.setSoTimeout(120000);
                     //цикл аутентификации
                     while (true) {
                         String str = in.readUTF();
+                        if (str.startsWith("/reg ")) {
+                            String[] token = str.split(" ");
+                            boolean isRegistr = server.getAuthService().registration(token[1],token[2],token[3],token[4]);
+                            if (isRegistr) {
+                                sendMsg("Регистрация прошла успешно");
+                            } else {
+                                sendMsg("Пользователь с указанной парой логин/пароль не можетбыть зарегистрирован");
+                            }
+                            
+                        }
                         if (str.startsWith("/auth ")) {
                             String[] token = str.split(" ");
-//                            String[] token1 = str.split(" ",3);
+                            if (token.length < 3) {
+                                continue;
+                            }
                             String newNick = server
                                     .getAuthService()
                                     .getNicknameByLoginAndPassword(token[1], token[2]);
                             if (newNick != null) {
-                                sendMsg("/authok " + newNick);
-                                nick = newNick;
                                 login = token[1];
-                                server.subscribe(this);
-                                System.out.println("Клиент " + nick + " подключился");
-                                break;
+                                if (!server.isLoginAuthorized(login)) {
+                                    sendMsg("/authok " + newNick);
+                                    nick = newNick;
+                                    server.subscribe(this);
+                                    System.out.println("Клиент " + nick + " подключился");
+                                    socket.setSoTimeout(0);
+                                    break;
+                                } else {
+                                    sendMsg("с этим логином авторизовались");
+                                }
+
                             } else {
                                 sendMsg("Неверный логин / пароль");
                             }
@@ -47,20 +67,26 @@ public class ClientHandler {
                     //цикл работы
                     while (true) {
                         String str = in.readUTF();
-                        if (str.equals("/end")) {
-                            out.writeUTF("/end");
-                            break;
-                        }
-                        if (str.startsWith("/w ")) {
-                            String[] token1 = str.split(" ",3);
-                            String friendNick = server
-                                    .getAuthService()
-                                    .getNickname(token1[1]);
-                            server.broadcastPrivateMsg(str,friendNick);
-                        } else {
-                            server.broadcastMsg(str);
+                        if (str.startsWith("/")) {
+                            if (str.equals("/end")) {
+                                out.writeUTF("/end");
+                                break;
+                            }
+                            if (str.startsWith("/w ")) {
+                                String[] token1 = str.split(" ", 3);
+                                if (token1.length == 3) {
+                                    String friendNick = server
+                                            .getAuthService()
+                                            .getNickname(token1[1]);
+                                    server.privateMsg(str, friendNick, nick);
+                                }
+                            } else {
+                                server.broadcastMsg(nick, str);
+                            }
                         }
                     }
+                } catch (SocketTimeoutException e) {
+                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
@@ -101,5 +127,9 @@ public class ClientHandler {
 
     public String getNick() {
         return nick;
+    }
+
+    public String getLogin() {
+        return login;
     }
 }
